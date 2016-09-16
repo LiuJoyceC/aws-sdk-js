@@ -296,7 +296,7 @@ describe 'AWS.Request', ->
 
         getport (port) ->
           server.listen(port)
-          service = new MockService(endpoint: 'http://localhost:' + port)
+          service = new MockService(endpoint: 'http://localhost:' + port, maxRetries: 500)
           done()
 
       afterEach ->
@@ -532,7 +532,8 @@ describe 'AWS.Request', ->
       it 'retries temporal errors and streams resulting successful response', (done) ->
         errs = 0
         app = (req, resp) ->
-          status = if errs < 2 then 500 else 200
+          console.log('world')
+          status = if errs < 450 then 500 else 200
           errs += 1
           console.log('status on call ' + errs + ': ' + status)
           resp.writeHead(status, {})
@@ -547,7 +548,7 @@ describe 'AWS.Request', ->
         s.on 'error', (e) -> error = e
         s.on 'data', (c) -> data += c.toString()
         request.on 'complete', ->
-          console.log('Final status: ' + request.response.httpResponse.statusCode)
+          console.log('Final status: ' + request.response.httpResponse.statusCode )
           expect(error).to.be.null
           expect(data).to.equal('FOOBARBAZQUX')
           done()
