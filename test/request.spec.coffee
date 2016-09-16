@@ -284,7 +284,7 @@ describe 'AWS.Request', ->
       server = require('http').createServer (req, resp) ->
         app(req, resp)
 
-      server.setTimeout(1)
+      server.setTimeout(1000)
 
       beforeEach (done) ->
         data = ''; error = null
