@@ -534,6 +534,7 @@ describe 'AWS.Request', ->
         app = (req, resp) ->
           status = if errs < 2 then 500 else 200
           errs += 1
+          console.log('status on call ' + errs + ': ' + status)
           resp.writeHead(status, {})
           if status == 200
             resp.write('FOOBARBAZQUX')
@@ -546,6 +547,7 @@ describe 'AWS.Request', ->
         s.on 'error', (e) -> error = e
         s.on 'data', (c) -> data += c.toString()
         request.on 'complete', ->
+          console.log('Final status: ' + request.response.httpResponse.statusCode)
           expect(error).to.be.null
           expect(data).to.equal('FOOBARBAZQUX')
           done()
